@@ -1,0 +1,14 @@
+{
+    "always_on_top": true,
+    "decorator_visible": false,
+    "transparent_background": false,
+    "alpha": 0,
+    "x_position": "1160",
+    "y_position": "865",
+    "string_format": "%H:%M",
+    "background_color": "#000001",
+    "foreground_color": "#FFFFFF",
+    "font_family": "Arial",
+    "font_size": 16,
+    "font_style": "bold"
+}
