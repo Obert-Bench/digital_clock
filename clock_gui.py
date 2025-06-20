@@ -1,12 +1,23 @@
-import tkinter as tk
-import time
-import json
+from tkinter import Tk, Label
+from time import strftime
+from json import load
 
-window = tk.Tk()
+window = Tk()
 
 f = open('config.json')
-prof = json.load(f)
+prof = load(f)
 f.close()
+
+def update_label(): 
+    current_time = strftime(string_format)
+    label.config(text=current_time)
+    window.after(update_interval, update_label) 
+
+def on_enter(event):
+    window.attributes("-alpha", 0.2) 
+
+def on_leave(event):
+    window.attributes("-alpha", 1) 
 
 #window.attributes('-toolwindow', False) #taskbar icon, doesnt work w overrideredirect
 background_color = prof["background_color"]
@@ -26,13 +37,10 @@ if "%S" in string_format:
 if prof["alpha"] != 0:
     window.attributes("-alpha", 0.7) 
 
-label = tk.Label(window, text="",font=font_details,fg=foreground_color, bg=background_color) 
+label = Label(window, text="",font=font_details,fg=foreground_color, bg=background_color) 
 label.pack(expand=True)
-
-def update_label(): 
-    current_time = time.strftime(string_format)
-    label.config(text=current_time)
-    window.after(update_interval, update_label)  
+label.bind("<Enter>",on_enter)
+label.bind("<Leave>",on_leave)
 
 if __name__ == "__main__":
     update_label() 
