@@ -3,12 +3,15 @@
     "decorator_visible": false,
     "transparent_background": false,
     "alpha": 0,
-    "x_position": "1160",
-    "y_position": "865",
-    "string_format": "%H:%M",
+    "x_position": "680",
+    "y_position": "0",
+    "string_format": "%I:%M %p",
     "background_color": "#000001",
-    "foreground_color": "#FFFFFF",
-    "font_family": "Arial",
+    "foreground_color": "#00FF00",
+    "font_family": "Impact",
     "font_size": 16,
-    "font_style": "bold"
+    "font_style": "",
+    "placeholders": "ignore everything after this",
+    "x_position2": "1160",
+    "y_position2": "865"
 }

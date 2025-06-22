@@ -26,7 +26,7 @@ def on_click(event):
 def on_drag(event):
     print("drag")
 
-#window.attributes('-toolwindow', False) #taskbar icon, doesnt work w overrideredirect
+window.attributes('-toolwindow', False) 
 background_color = prof["background_color"]
 foreground_color = prof["foreground_color"]
 string_format = prof["string_format"]
