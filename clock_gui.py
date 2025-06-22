@@ -26,7 +26,7 @@ def on_click(event):
 def on_drag(event):
     print("drag")
 
-window.attributes('-toolwindow', False) 
+window.attributes('-toolwindow', True) 
 background_color = prof["background_color"]
 foreground_color = prof["foreground_color"]
 string_format = prof["string_format"]
