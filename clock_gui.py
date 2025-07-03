@@ -2,12 +2,12 @@ from tkinter import Tk, Label
 from time import strftime
 from json import load
 
+# TODO: right click to display settings, drag to move gui
 
 class DigitalClock(Tk):
     def __init__(self, *args, **kwargs):
         Tk.__init__(self, *args, **kwargs)
-        self.wm_title("Test Application")
-        self.clock_label = Label( text="jajaja") 
+        self.clock_label = Label( text="foooo") 
 
         self.update_interval = 6000
         self.config = {
@@ -28,11 +28,15 @@ class DigitalClock(Tk):
         self.load_config()
         self.set_config()
         self.update_label()
+
         self.clock_label.pack(expand=True)
-        self.bind("<Enter>",self.on_enter)
-        self.bind("<Leave>",self.on_leave)
+
+        #needed to adjust relative position of mouse to gui during drag event
+        self.init = [0,0]
+        self.bind("<Enter>",lambda e:self.update_alpha(e,0.2))
+        self.bind("<Leave>",lambda e:self.update_alpha(e,self.config["alpha"]))
         self.bind("<Button-1>", self.on_click)
-        self.bind("<Button-1>",self.on_drag)
+        self.bind("<B1-Motion>",self.on_drag)
 
     def load_config(self,file_name = "config.json"):
         try:
@@ -68,23 +72,19 @@ class DigitalClock(Tk):
         self.clock_label.config(text=current_time)
         self.after(self.update_interval, self.update_label) 
 
-    def update_alpha(self, value):
+    def update_alpha(self, event, value):
         self.attributes("-alpha", value) 
 
-    def on_enter(self,event):
-        self.attributes("-alpha", 0.2) 
-
-    def on_leave(self,event):
-        self.attributes("-alpha", self.config["alpha"]) 
-
     def on_click(self,event):
-        print("click")
+        self.init = [event.x,event.y]
 
     def on_drag(self,event):
-        print("drag") 
+        self.update_alpha(event,self.config["alpha"])
+        x = self.winfo_x() + (event.x)
+        y = self.winfo_y() + (event.y)
+        self.geometry(f"+{x - self.init[0]}+{y - self.init[1]}")
 
     
 if __name__ == "__main__":
     clock = DigitalClock()  
     clock.mainloop()
-    clock.load_config()
