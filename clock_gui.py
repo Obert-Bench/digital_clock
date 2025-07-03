@@ -2,59 +2,89 @@ from tkinter import Tk, Label
 from time import strftime
 from json import load
 
-window = Tk()
-alpha = 1
 
-f = open('config.json')
-prof = load(f)
-f.close()
+class DigitalClock(Tk):
+    def __init__(self, *args, **kwargs):
+        Tk.__init__(self, *args, **kwargs)
+        self.wm_title("Test Application")
+        self.clock_label = Label( text="jajaja") 
 
-def update_label(): 
-    current_time = strftime(string_format)
-    label.config(text=current_time)
-    window.after(update_interval, update_label) 
+        self.update_interval = 6000
+        self.config = {
+            "alpha": 1,
+            "always_on_top": True,
+            "decorator_visible": False,
+            "transparent_background": False,
+            "taskbar_icon": False,
+            "x_position": 0,
+            "y_position": 0,
+            "string_format": "%I:%M %p",
+            "background_color": "#000001",
+            "foreground_color": "#00FF00",
+            "font_family": "Impact",
+            "font_style": "",
+            "font_size": 10
+        }
+        self.load_config()
+        self.set_config()
+        self.update_label()
+        self.clock_label.pack(expand=True)
+        self.bind("<Enter>",self.on_enter)
+        self.bind("<Leave>",self.on_leave)
+        self.bind("<Button-1>", self.on_click)
+        self.bind("<Button-1>",self.on_drag)
 
-def on_enter(event):
-    window.attributes("-alpha", 0.2) 
+    def load_config(self,file_name = "config.json"):
+        try:
+            with open(file_name, 'r') as file:
+                profile = load(file)
+        except:
+            print("The file '" + file_name + "' could not be found, the default configuration will be loaded")
+            return
+        for setting in self.config:
+            if profile[setting] != None:
+                self.config[setting] = profile[setting]
+    
+    def set_config(self):
+        self.geometry("+" + str(self.config["x_position"]) + "+" + str(self.config["y_position"]))
+        self.attributes("-alpha", self.config["alpha"]) 
+        if not self.config["taskbar_icon"]:
+            self.attributes('-toolwindow', True) 
+        if not self.config["decorator_visible"]:
+            self.overrideredirect(True)
+        if self.config["always_on_top"]:
+            self.wm_attributes("-topmost", 1)
+        if self.config["transparent_background"]:
+            self.attributes('-transparentcolor', self.config["background_color"])
 
-def on_leave(event):
-    window.attributes("-alpha", alpha) 
+        font_details = (self.config["font_family"],self.config["font_size"],self.config["font_style"])
+        self.clock_label.config(font=font_details, bg= self.config["background_color"], fg = self.config["foreground_color"])
 
-def on_click(event):
-    print("click")
+        if "%S" in self.config["string_format"]:
+            self.update_interval = 1000 
 
-def on_drag(event):
-    print("drag")
+    def update_label(self): 
+        current_time = strftime(self.config["string_format"])
+        self.clock_label.config(text=current_time)
+        self.after(self.update_interval, self.update_label) 
 
-window.attributes('-toolwindow', True) 
-background_color = prof["background_color"]
-foreground_color = prof["foreground_color"]
-string_format = prof["string_format"]
-font_details = (prof["font_family"],prof["font_size"],prof["font_style"])
-window.geometry("+" + prof["x_position"] + "+" + prof["y_position"])
+    def update_alpha(self, value):
+        self.attributes("-alpha", value) 
 
-if not prof["decorator_visible"]:
-    window.overrideredirect(True)
-if prof["always_on_top"]:
-    window.wm_attributes("-topmost", 1)
-if prof["transparent_background"]:
-    window.attributes('-transparentcolor', background_color)
-update_interval = 6000
-if "%S" in string_format:
-    update_interval = 1000
-if prof["alpha"] != 0:
-    alpha = prof["alpha"]
+    def on_enter(self,event):
+        self.attributes("-alpha", 0.2) 
 
-window.attributes("-alpha", alpha) 
+    def on_leave(self,event):
+        self.attributes("-alpha", self.config["alpha"]) 
 
-label = Label(window, text="",font=font_details,fg=foreground_color, bg=background_color) 
-label.pack(expand=True)
-label.bind("<Enter>",on_enter)
-label.bind("<Leave>",on_leave)
-label.bind("<Button-1>", on_click)
-#label.bind("<Button-1>",on_drag)
+    def on_click(self,event):
+        print("click")
 
+    def on_drag(self,event):
+        print("drag") 
+
+    
 if __name__ == "__main__":
-    update_label() 
-    window.mainloop()
-
+    clock = DigitalClock()  
+    clock.mainloop()
+    clock.load_config()
