@@ -1,6 +1,8 @@
-from tkinter import  Tk, Label, Checkbutton, Toplevel, Scale, HORIZONTAL
+from tkinter import  Button, Tk, Label, Checkbutton, Radiobutton, Entry,Toplevel, Scale, HORIZONTAL, colorchooser
 from time import strftime
 from json import load
+from tkinter.ttk import Combobox
+from settings_gui import Settings
 
 # TODO: right click to display settings
 
@@ -85,28 +87,8 @@ class DigitalClock(Tk):
         self.geometry(f"+{x - self.init[0]}+{y - self.init[1]}")
 
     def open_settings(self,event):
-        settings = Toplevel(self)
-        settings.wm_title("Settings")
-        c = 0
-        for setting in self.config:
-            l = Label(settings, text=setting)
-            l.grid(row=c,column=0,sticky="W")
-            c+=1
-        w_alpha = Scale(settings, from_=0, to=1, orient=HORIZONTAL, resolution= 0.1)
-        w_alpha.grid(row=0,column=1)
-
-        # error
-        #var = 1
-        #w_aot = Checkbutton(setting,variable=var,onvalue=1,offvalue=0)
-        #w_aot.grid(row=1,column=1)
-
-        w_xpos = Scale(settings, from_=0, to=3000, orient=HORIZONTAL)
-        w_xpos.grid(row=5,column=1)
-        w_ypos = Scale(settings, from_=0, to=3000, orient=HORIZONTAL)
-        w_ypos.grid(row=6,column=1)
-
-        w_fsize = Scale(settings, from_=1, to=100, orient=HORIZONTAL)
-        w_fsize.grid(row=12,column=1)
+        settings = Settings(self,self.config)
+        
 
 
     
